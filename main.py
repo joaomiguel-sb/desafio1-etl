@@ -13,62 +13,8 @@ app = FastAPI(
 )
 
 # ========================================
-# SCHEMAS PYDANTIC
-# ========================================
-
-# Schema para resposta (GET)
-""" class FinancialImpactResponse(BaseModel):
-    id: int
-    incident_id: str
-    direct_loss_usd: Optional[float]
-    total_loss_usd: Optional[float]
-    
-    class Config:
-        from_attributes = True """
-
-
-# Schema para criar/atualizar (POST/PUT)
-""" class FinancialImpactCreate(BaseModel):
-    incident_id: str
-    direct_loss_usd: Optional[float] = None
-    direct_loss_method: Optional[str] = None
-    ransom_demanded_usd: Optional[float] = None
-    ransom_paid_usd: Optional[float] = None
-    ransom_source: Optional[str] = None
-    recovery_cost_usd: Optional[float] = None
-    legal_fees_usd: Optional[float] = None
-    regulatory_fine_usd: Optional[float] = None
-    insurance_payout_usd: Optional[float] = None
-    total_loss_usd: Optional[float] = None
-    total_loss_method: Optional[str] = None
-    total_loss_lower_bound: Optional[float] = None
-    total_loss_upper_bound: Optional[float] = None
-    inflation_adjusted_usd: Optional[float] = None
-    cpi_index_used: Optional[str] = None
-    notes: Optional[str] = None
-    created_at: Optional[str] = None
-    updated_at: Optional[str] = None
- """
-
-# ========================================
 # ENDPOINTS
 # ========================================
-
-@app.get("/")
-def root():
-    """Página inicial"""
-    return {
-        "message": "Financial Impact API",
-        "docs": "/docs",
-        "endpoints": {
-            "list_all": "GET /financial/",
-            "get_by_id": "GET /financial/{incident_id}",
-            "create": "POST /financial/",
-            "update": "PUT /financial/{incident_id}",
-            "delete": "DELETE /financial/{incident_id}",
-            "top_losses": "GET /financial/loss/top"
-        }
-    }
 
 
 @app.get("/financial/", response_model=List[FinancialImpactGet])
@@ -142,15 +88,6 @@ def atualizar_incidente(
     db.refresh(incidente_existente)
     
     return incidente_existente
-
-
-@app.get("/financial/loss/top")
-def maiores_perdas(limit: int = 10, db: Session = Depends(get_db)):
-    """Top N incidentes com maiores perdas"""
-    return db.query(FinancialImpact)\
-        .order_by(desc(FinancialImpact.total_loss_usd))\
-        .limit(limit)\
-        .all()
 
 
 @app.delete("/financial/{incident_id}")
