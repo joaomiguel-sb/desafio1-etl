@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Numeric, String, Float
+from sqlalchemy import Column, Integer, Numeric, String, Date
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -24,5 +24,4 @@ class FinancialImpact(Base):
     inflation_adjusted_usd = Column(Numeric(12,2))
     cpi_index_used = Column(String(100))
     notes = Column(String(500))
-    created_at = Column(String(50))
-    updated_at = Column(String(50))
+    incident_date = Column(Date)
